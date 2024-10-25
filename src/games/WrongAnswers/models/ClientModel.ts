@@ -90,12 +90,14 @@ export class WrongAnswersClientModel extends ClusterfunClientModel  {
     // 
     //--------------------------------------------------------------------------------------
     enterAnswer() {
+        if(this.currentAnswer.trim().length === 0) return;
+
         action(()=>{
-            this.answers.unshift(this.currentAnswer);
+            this.answers.unshift(this.currentAnswer.trim());
             this.currentAnswer = "";
             this.saveCheckpoint();
             this.session.sendMessageToPresenter(WrongAnswersAnswerUpdate, { answers: this.answers})
-        })()
+        })()            
     }
 
     //--------------------------------------------------------------------------------------

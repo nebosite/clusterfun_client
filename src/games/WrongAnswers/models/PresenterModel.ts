@@ -114,7 +114,7 @@ export class WrongAnswersPresenterModel extends ClusterfunPresenterModel<WrongAn
 
     get currentPrompt() { return this._prompts[this.currentRound - 1]}
     
-    @observable  private _answerSetSize = 8
+    @observable  private _answerSetSize = 16
     get answerSetSize() {return this._answerSetSize}
     set answerSetSize(value) {action(()=>{this._answerSetSize = value})()}
 
@@ -164,7 +164,7 @@ export class WrongAnswersPresenterModel extends ClusterfunPresenterModel<WrongAn
     //--------------------------------------------------------------------------------------
     handleAnswerUpdate = (sender:string, message: WrongAnswersAnswerUpdateMessage) => {
         if(!this.players) {
-            console.log("WEIRD: undefined players!");
+            console.log("WEIRD:  undefined players!");
             return;
         }
 

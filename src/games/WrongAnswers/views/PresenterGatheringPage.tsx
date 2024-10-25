@@ -18,7 +18,7 @@ export class PresenterGatheringPage  extends React.Component<{appModel?: WrongAn
         return (
             <div>
                 <h3>Welcome to {appModel.name}</h3>
-                <p>... a game where it is right to be wrong!</p>
+                <p>...  a game where it is right to be wrong!</p>
                 <p>To Join: go to http://{ window.location.host} and enter this room code: {appModel.roomId}</p>
                 {
                     appModel.players.length > 0

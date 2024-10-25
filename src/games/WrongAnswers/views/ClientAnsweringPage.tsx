@@ -4,10 +4,29 @@ import { observer } from "mobx-react";
 import styles from "./Client.module.css"
 import { WrongAnswersClientModel } from "../models/ClientModel";
 import { Row } from "libs";
+import { action, makeObservable, observable } from "mobx";
+import { doNothing } from "libs/helpers/time";
 
+export class AnweringPageState {
+
+    @observable  private _plusProgress = 0.0
+    get plusProgress() {return this._plusProgress}
+    set plusProgress(value) {action(()=>{this._plusProgress = value})()}
+
+    //--------------------------------------------------------------------------------------
+    // ctor
+    //--------------------------------------------------------------------------------------
+    constructor() { makeObservable(this) }
+}
 
 @observer
 export class ClientAnsweringPage  extends React.Component<{appModel?: WrongAnswersClientModel}> {
+
+    holdingPlus = false;
+    plusDownTime = 0;
+    plusHoldTimeout = 5000;
+    st = new AnweringPageState();
+    placedRandom = false;
 
     // -------------------------------------------------------------------
     // render
@@ -17,6 +36,11 @@ export class ClientAnsweringPage  extends React.Component<{appModel?: WrongAnswe
         if (!appModel) return <div>NO APP MODEL</div>;
 
         const handleAnswerEntry = () => {
+            this.holdingPlus = false;
+            if(this.placedRandom) {
+                this.placedRandom = false;
+                return;
+            }
             appModel.enterAnswer();
         }
 
@@ -44,8 +68,37 @@ export class ClientAnsweringPage  extends React.Component<{appModel?: WrongAnswe
                     </div>
         }
 
+        const handlePlusDown = () => {
+            console.log(`DOWN: ${this.holdingPlus}`)
+            if(!this.holdingPlus) {
+                this.holdingPlus = true;
+                this.plusDownTime = Date.now();
+                setTimeout(async () => {
+                    while(true) {
+                        console.log(`    holding: ${this.holdingPlus} ${this.st.plusProgress.toFixed(3)}`)
+                        if(!this.holdingPlus) return;
+                        this.st.plusProgress = (Date.now() - this.plusDownTime)/this.plusHoldTimeout;
+                        
+                        if(this.st.plusProgress > 1) {
+                            this.st.plusProgress = 0;
+                            appModel.currentAnswer = "RANDOM";
+                            this.placedRandom = true;
+                        }     
+                        
+                        await doNothing(100);
+                    }
+
+                },0 );
+            }   
+        }
+
+        const handlePlusUp = () => {
+            this.holdingPlus = false;
+        }
+
         return (
             <div>
+                <div className={styles.promptHint}>(Press and hold "+" for to generate a random answer.)</div>
                 <div className={styles.promptPrefix}>
                     Enter at least {appModel.minAnswers} wrong answer{appModel.minAnswers === 1 ? "" : "s"} for: 
                 </div>
@@ -53,15 +106,29 @@ export class ClientAnsweringPage  extends React.Component<{appModel?: WrongAnswe
                     {appModel.prompt}
                 </div>
                 <Row style={{marginBottom: "30px"}}>
-                    <input
-                        className={styles.inputText}
-                        type="text"
-                        value={appModel.currentAnswer}
-                        onChange={handleNewValue}
-                    />   
+                    <div className={styles.progressInputContainer}>
+                        <div 
+                            className={styles.plusProgress} 
+                            style={{width: `${this.st.plusProgress * 100}%`}}
+                        >
+                        </div>                       
+                        <input
+                            className={styles.inputText}
+                            type="text"
+                            value={appModel.currentAnswer}
+                            onChange={handleNewValue}
+                        / >                           
+
+
+                    </div>
                     <button 
                         className={styles.answerButton}
-                            onClick={handleAnswerEntry}>✚</button>                    
+                        style={{
+                            marginLeft: "930px", 
+                            background: appModel.currentAnswer.trim().length === 0 ? "gray" : "inherit" }}
+                        onMouseDown={handlePlusDown}
+                        onMouseUp={handlePlusUp}
+                        onClick={handleAnswerEntry}>✚</button>                    
                 </Row>
                 <div>
                     {appModel.answers.map((a,i) => renderAnswer(a,i))}

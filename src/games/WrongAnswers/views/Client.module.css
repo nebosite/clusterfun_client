@@ -36,6 +36,9 @@
     justify-content: space-around;
 }
 
+.gameclient .prompt {
+    font-weight: 800;
+}
 .gameclient .quitbutton {
     font-size: 40px;
     font-weight: 800;
@@ -52,13 +55,34 @@
 .gameclient .promptPrefix {
     background-color: #00000020;
 }
-.gameclient .prompt {
-    font-weight: 800;
+.gameclient .promptHint {
+    font-style: italic;
+    font-size: 80%;
 }
-.gameclient .inputText {
-    font-size: 150%;
-    width: 95%;
-}
+
+/* progress input prompt */
+
+    .gameclient .plusProgress {
+        position: absolute;
+        height: 50px;
+        background-color: #00ff0080;
+        width: 100px;
+        height: 100%;
+    }
+
+    .gameclient .progressInputContainer {
+        position: absolute;
+        width: 85%;
+        height: 100px;
+        background-color: #e0e0e0;
+        overflow: hidden;
+    }
+
+
+    .gameclient .inputText {
+        font-size: 150%;
+        width: 100%;
+    }
 
 .gameclient .answerBox {
     border: 3px solid #00000080;

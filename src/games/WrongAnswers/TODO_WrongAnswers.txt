@@ -19,6 +19,9 @@ Wrong Answers TODO
         [x] Promote answers
         [x] Bug: players is undefined when receiving answerUpdate message
         [x] Server shows the progress in receiving answers
+        [x] Don't allow blank answers
+        [x] Have a random 
+        [ ] use npm txtgen to generate random sentences
         [ ] When enough answers are in, move to the combat phase
     [ ] Voting phase
         - Basic bracket playoff
