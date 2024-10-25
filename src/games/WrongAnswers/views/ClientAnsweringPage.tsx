@@ -6,6 +6,7 @@ import { WrongAnswersClientModel } from "../models/ClientModel";
 import { Row } from "libs";
 import { action, makeObservable, observable } from "mobx";
 import { doNothing } from "libs/helpers/time";
+import { generateSentance } from "libs/helpers/word";
 
 export class AnweringPageState {
 
@@ -24,7 +25,7 @@ export class ClientAnsweringPage  extends React.Component<{appModel?: WrongAnswe
 
     holdingPlus = false;
     plusDownTime = 0;
-    plusHoldTimeout = 5000;
+    plusHoldTimeout = 2000;
     st = new AnweringPageState();
     placedRandom = false;
 
@@ -37,6 +38,7 @@ export class ClientAnsweringPage  extends React.Component<{appModel?: WrongAnswe
 
         const handleAnswerEntry = () => {
             this.holdingPlus = false;
+            this.st.plusProgress = 0;
             if(this.placedRandom) {
                 this.placedRandom = false;
                 return;
@@ -81,8 +83,9 @@ export class ClientAnsweringPage  extends React.Component<{appModel?: WrongAnswe
                         
                         if(this.st.plusProgress > 1) {
                             this.st.plusProgress = 0;
-                            appModel.currentAnswer = "RANDOM";
+                            appModel.currentAnswer = generateSentance();
                             this.placedRandom = true;
+                            this.plusDownTime = Date.now();
                         }     
                         
                         await doNothing(100);
@@ -94,6 +97,7 @@ export class ClientAnsweringPage  extends React.Component<{appModel?: WrongAnswe
 
         const handlePlusUp = () => {
             this.holdingPlus = false;
+            this.st.plusProgress = 0;
         }
 
         return (

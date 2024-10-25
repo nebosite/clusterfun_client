@@ -21,7 +21,7 @@ Wrong Answers TODO
         [x] Server shows the progress in receiving answers
         [x] Don't allow blank answers
         [x] Have a random 
-        [ ] use npm txtgen to generate random sentences
+        [x] better random sentences
         [ ] When enough answers are in, move to the combat phase
     [ ] Voting phase
         - Basic bracket playoff
